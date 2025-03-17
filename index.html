@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SD Search</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="jquery-3.7.1.js"></script>
     <script src="hw2_search_dataset.js"></script>
     <script defer src="script.js"></script>
     <style>
@@ -18,7 +18,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .dark-mode {
-            background-color: #121212;
+            background-color: #1e1e1e;
             color: #fff;
         }
         .navbar {
@@ -41,26 +41,64 @@
             font-size: 20px;
             font-weight: bold;
         }
+        .search-container {
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            background: #fff;
+            padding: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 600px; 
+            flex-shrink: 1;
+        }
+        .dark-mode .search-container {
+            background: #444;
+            border: 1px solid #666;
+        }
         #search-box {
+            border: none;
+            outline: none;
+            background: transparent;
             flex: 1;
-            margin: 0 20px;
             padding: 8px;
             font-size: 16px;
+        }
+        .search-icon {
+            cursor: pointer;
+            padding: 8px;
         }
         .icons {
             display: flex;
             align-items: center;
         }
         .user-icon {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: gray;
             margin-left: 10px;
+            background: url('user_icon.png') no-repeat center/cover;
         }
         main {
             margin-top: 60px;
             padding: 20px;
+        }
+        .info-bar {
+            max-width: 800px; /* 跟 result-container 對齊 */
+            margin: 10px auto; /* 置中 */
+            padding: 5px;
+        }
+        .result-container {
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: #fff;
+        }
+        .dark-mode .result-container {
+            background: #3a3a3a;
         }
         #results div {
             padding: 10px;
@@ -72,6 +110,9 @@
             padding: 10px;
             font-size: 16px;
             cursor: pointer;
+        }
+        #load-more:disabled {
+            display: none;
         }
         #scroll-to-top {
             position: fixed;
@@ -91,7 +132,10 @@
 <body>
     <header class="navbar">
         <div class="logo">SD Search</div>
-        <input type="text" id="search-box" placeholder="國立中央大學">
+        <div class="search-container">
+            <input type="text" id="search-box" placeholder="國立中央大學">
+            <span class="search-icon">🔍</span>
+        </div>
         <div class="icons">
             <button id="theme-toggle">🌞</button>
             <div class="user-icon"></div>
@@ -101,6 +145,9 @@
     <main>
         <div class="info-bar">
             <span id="result-count">共找到 0 筆結果</span>
+        </div>
+        <div class="info-bar">
+            <b>排序方式</b>
             <select id="sort-options">
                 <option value="title">按照標題</option>
                 <option value="created_at">按照時間</option>
@@ -126,9 +173,9 @@
             let end = start + itemsPerPage;
             let resultsToShow = dataset.slice(0, end);
             
-            resultsToShow.forEach(item => {
+            resultsToShow.forEach(item => { // 資料處理顯示
                 $("#results").append(`
-                    <div>
+                    <div class="result-container">
                         <a href="${item.url}" target="_blank"><h3>${item.title}</h3></a>
                         <p>${item.text}</p>
                         <small>${item.created_at} | 人氣: ${item.popularity}</small>
@@ -136,12 +183,32 @@
                 `);
             });
             $("#result-count").text(`共找到 ${dataset.length} 筆結果`);
+            if (end >= dataset.length) { // 載入更多按鈕消失
+                $("#load-more").prop("disabled", true);
+            }
         }
 
         $("#load-more").click(function() {
             currentPage++;
             renderResults();
         });
+
+        $(".search-icon").click(function() {
+            search();
+        });
+
+        $("#search-box").keypress(function(event) {
+            if (event.which === 13) {
+                search();
+            }
+        });
+
+        function search() { // 搜尋功能(點擊放大鏡、Enter)
+            let query = $("#search-box").val().toLowerCase();
+            dataset = SEARCH_DATASET.filter(item => item.title.toLowerCase().includes(query) || item.text.toLowerCase().includes(query));
+            currentPage = 0;
+            renderResults();
+        }
 
         $("#sort-options").change(function() {
             let sortBy = $(this).val();
