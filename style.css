@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+}
+.dark-mode {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+.dark-mode .navbar {
+    background: #333;
+}
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap; /* 讓文字不會換行 */
+    min-width: 120px; /* 避免 RWD 時被擠壓 */
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    background: #fff;
+    padding: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 600px; 
+    flex-shrink: 1;
+}
+.dark-mode .search-container {
+    background: #535353;
+    border: 1px solid #666;
+}
+#search-box {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+}
+.search-icon {
+    cursor: pointer;
+    padding: 8px;
+}
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-right: 50px; /* 往左喬 */
+}
+.user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: gray;
+    margin-left: 10px;
+    background: url('user_icon.png') no-repeat center/cover;
+}
+main {
+    margin-top: 60px;
+    padding: 20px;
+}
+.info-bar {
+    max-width: 800px; /* 跟 result-container 對齊 */
+    margin: 10px auto; /* 置中 */
+    padding: 5px;
+}
+.result-container {
+    max-width: 800px;
+    margin: 10px auto;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+.dark-mode .result-container {
+    background: #535353;
+}
+#results div {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+#load-more {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+#load-more:disabled {
+    display: none;
+}
+#scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: none;
+    cursor: pointer;
+}
